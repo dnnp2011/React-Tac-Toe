@@ -14,7 +14,7 @@
     "editor.tabCompletion": true,
     "editor.tokenColorCustomizations": {},
     "editor.wordWrap": "on",
-    "workbench.iconTheme": "vs-seti",
+    "workbench.iconTheme": "material-icon-theme",
     "workbench.startupEditor": "none",
     "window.newWindowDimensions": "inherit",
     "window.zoomLevel": 2,
