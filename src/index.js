@@ -20,7 +20,7 @@ class Board extends React.Component {
 			/>
 		);
 	}
-	
+
 	render() {
 		return (
 			<div>
@@ -50,13 +50,14 @@ class Game extends React.Component {
 		this.state = {
 			history: [{
 				squares: Array(9).fill(null),
+				lastMove: null,
 			}],
 			xIsNext: true,
 			winner: null,
 			stepNumber: 0,
 		}
 	}
-	
+
 	handleClick(i) {
 		const history = this.state.history.slice(0, this.state.stepNumber + 1);
 		const current = history[history.length - 1];
@@ -77,7 +78,7 @@ class Game extends React.Component {
 			stepNumber: history.length
 		});
 	}
-	
+
 	jumpTo(step) {
 		this.setState({
 			stepNumber: step,
@@ -85,26 +86,46 @@ class Game extends React.Component {
 			history: this.state.history.slice(0, step + 1),
 		})
 	}
-	
+
 	render() {
 		const history = this.state.history;
 		const current = history[this.state.stepNumber];
 		const winner = calculateWinner(current.squares);
 		let status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
-		
+
 		if (winner) {
 			status = `Game Over! Winner is: ${winner}`;
 		}
-		
+		let difference;
 		const moves = history.map((step, move) => {
-			const desc = move ? `Go to move #${move}` : 'Go to game start';
-			return (
-				<li key={move}>
-					<button onClick={() => this.jumpTo(move)}>{desc}</button>
-				</li>
-			);
+			if (history.length > 1) {
+				difference = history[move].squares.findIndex((value, index, obj)=> {
+					if (value === null)
+						return false;
+					else
+						return history[move - 1].squares[index] !== value;
+						}, history);
+
+			}
+			let row = difference < 3 ? 1 : difference < 6 ? 2 : 3;
+			let col = row === 1 ? difference + 1 : row === 2 ? difference - 2 : difference - 5;
+			const desc = move ? `${current.squares[difference]} at (${col}, ${row})` : 'Go to game start';
+
+			const value = (move === this.state.stepNumber ? desc.bold() : desc);
+			if (move === this.state.stepNumber)
+				return (
+					<li key={move}>
+						<button onClick={() => this.jumpTo(move)}><b>{desc}</b></button>
+					</li>
+				);
+			else
+				return (
+					<li key={move}>
+						<button onClick={() => this.jumpTo(move)}>{value}</button>
+					</li>
+				);
 		});
-		
+
 		return (
 			<div className="game">
 				<div className="game-board">
@@ -130,7 +151,7 @@ function calculateWinner(squares) {
 		[0, 4, 8],
 		[2, 4, 6],
 	];
-	
+
 	for (let i = 0; i < lines.length; i++) {
 		const [a, b, c] = lines[i];
 		if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c])
