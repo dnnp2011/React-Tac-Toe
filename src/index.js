@@ -22,16 +22,12 @@ class Board extends React.Component {
 	}
 
 	render() {
+		for(let i = 0; i < 3; i++){
+			for (let n = 0; n < 3; n++) {
+
+			}
+		}
 		return (
-			/* 			<div>
-							for (let i = 0; i < 3; i++) {
-							// Returns each DIV block
-							for (let n = 0; i < 3; i++) {
-								// Renders each square
-			
-							}
-							}
-						</div> */
 			<div>
 				<div className="board-row">
 					{this.renderSquare(0)}
